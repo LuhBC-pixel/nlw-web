@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import * as Dialog from '@radix-ui/react-dialog';
-import { GameBanner } from './components/GameBanner';
 import { CreateAdBanner } from './components/CreateAdBanner';
-import { GameController } from 'phosphor-react';
+import { CreateAdModal } from './components/CreateAdModal';
 
 import logoImg from './assets/logo-nlw-esports.svg';
-
 import './styles/main.css';
-import { Input } from './components/Form/Input';
-import { CreateAdModal } from './components/CreateAdModal';
-import axios from 'axios';
+import { Slider } from './components/Slider';
 
 interface Game {
   id: string;
@@ -41,18 +38,7 @@ function App() {
         está aqui.
       </h1>
 
-      <div className='grid grid-cols-6 gap-6 mt-16'>
-        {games?.map((game) => {
-          return (
-            <GameBanner
-              key={game.id}
-              bannerUrl={game.bannerUrl}
-              title={game.title}
-              adsCount={game._count.ads}
-            />
-          );
-        })}
-      </div>
+      <Slider games={games || []} />
 
       <Dialog.Root>
         <CreateAdBanner />
