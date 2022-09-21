@@ -14,9 +14,11 @@ export function CreateAdModal() {
   const [useVoiceChannel, setUseVoiceChannel] = useState(false);
 
   useEffect(() => {
-    axios('http://localhost:3000/games').then((response) => {
-      setGames(response.data);
-    });
+    axios('https://nlw-server-production-254a.up.railway.app/games').then(
+      (response) => {
+        setGames(response.data);
+      }
+    );
   }, []);
 
   return (

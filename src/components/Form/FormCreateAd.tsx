@@ -55,15 +55,18 @@ export function FormCreateAd({
 
   async function handleCreatAd(data: IFormInputs) {
     try {
-      await axios.post(`http://localhost:3000/games/${data.game}/ads`, {
-        name: data.name,
-        yearsPlaying: Number(data.yearsPlaying),
-        discord: data.discord,
-        weekDays: weekDays.map(Number),
-        hourStart: data.hourStart,
-        hourEnd: data.hourEnd,
-        useVoiceChannel: useVoiceChannel,
-      });
+      await axios.post(
+        `https://nlw-server-production-254a.up.railway.app/games/${data.game}/ads`,
+        {
+          name: data.name,
+          yearsPlaying: Number(data.yearsPlaying),
+          discord: data.discord,
+          weekDays: weekDays.map(Number),
+          hourStart: data.hourStart,
+          hourEnd: data.hourEnd,
+          useVoiceChannel: useVoiceChannel,
+        }
+      );
 
       alert('Anúncio criado com sucesso!');
     } catch (err) {
