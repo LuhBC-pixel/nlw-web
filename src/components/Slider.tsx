@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
-import 'keen-slider/keen-slider.min.css';
 import { GameBanner } from './GameBanner';
+import 'keen-slider/keen-slider.min.css';
 
 interface Game {
   id: string;
@@ -12,7 +13,7 @@ interface Game {
 }
 
 export function Slider({ games }: { games: Game[] }) {
-  const [ref] = useKeenSlider<HTMLDivElement>(
+  const [sliderRef, internalSlider] = useKeenSlider<HTMLDivElement>(
     {
       slides: {
         perView: 4,
@@ -52,8 +53,12 @@ export function Slider({ games }: { games: Game[] }) {
     ]
   );
 
+  React.useEffect(() => {
+    internalSlider.current?.update({});
+  }, [internalSlider, games]);
+
   return (
-    <div ref={ref} className='flex w-full ml-auto mt-16 keen-slider'>
+    <div ref={sliderRef} className='flex w-full ml-auto mt-16 keen-slider'>
       {games?.map((game) => {
         return (
           <div key={game.id} className='flex w-full ml-auto'>

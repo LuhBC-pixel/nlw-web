@@ -1,13 +1,13 @@
 import axios from 'axios';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { InputControlled } from './InputControlled';
+
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Check, GameController } from 'phosphor-react';
-import { Input } from './Input';
+import '../../styles/input.css';
+import { WeekDays } from './WeekDays';
 
 interface Game {
   id: string;
@@ -32,7 +32,7 @@ interface Props {
 }
 
 const schema = yup.object({
-  game: yup.string().required('Game is required'),
+  game: yup.string().required('Selecione um jogo'),
   name: yup.string().required('Nome é obrigatório'),
   yearsPlaying: yup.number().required('Anos de experiência é obrigatório'),
   discord: yup.string().required('Discord é obrigatório'),
@@ -49,11 +49,14 @@ export function FormCreateAd({
 }: Props) {
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>({ resolver: yupResolver(schema) });
 
-  async function handleCreatAd(data: IFormInputs) {
+  const data = watch();
+
+  async function handleCreatAd() {
     try {
       await axios.post(
         `https://nlw-server-production-254a.up.railway.app/games/${data.game}/ads`,
@@ -99,131 +102,80 @@ export function FormCreateAd({
             </option>
           ))}
         </select>
+        <p className='text-red-500 text-sm'>Selecione um game</p>
       </div>
 
-      <InputControlled
-        name='name'
-        label='Seu nome (ou nickname)'
-        placeholder='Como te chamam dentro do game?'
-        errors={errors}
-        register={register('name')}
-      />
+      <div className='flex flex-col gap-2'>
+        <label htmlFor='name' className='font-semibold'>
+          Seu nome (ou nickname)
+        </label>
+        <input
+          type='text'
+          id='name'
+          placeholder='Como te chamam dentro do game?'
+          className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'
+          {...register('name')}
+        />
+        <p className='text-red-500 text-sm'>{errors.name?.message}</p>
+      </div>
 
       <div className='grid grid-cols-2 gap-6'>
-        <InputControlled
-          type='number'
-          name='yearsPlaying'
-          label='Joga há quantos anos?'
-          placeholder='Tudo bem ser ZERO'
-          errors={errors}
-          register={register('yearsPlaying')}
-        />
+        <div className='flex flex-col gap-2'>
+          <label htmlFor='yearsPlaying' className='font-semibold'>
+            Joga há quantos anos?
+          </label>
+          <input
+            type='number'
+            id='yearsPlaying'
+            placeholder='Tudo bem ser ZERO'
+            className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'
+            {...register('yearsPlaying')}
+          />
+          <p className='text-red-500 text-sm'>{errors.yearsPlaying?.message}</p>
+        </div>
 
-        <InputControlled
-          name='discord'
-          label='Qual seu Discord?'
-          placeholder='Usuario#0000'
-          errors={errors}
-          register={register('discord')}
-        />
+        <div className='flex flex-col gap-2'>
+          <label htmlFor='discord' className='font-semibold'>
+            Qual seu Discord?
+          </label>
+          <input
+            type='text'
+            id='discord'
+            placeholder='Usuario#0000'
+            className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'
+            {...register('discord')}
+          />
+          <p className='text-red-500 text-sm'>{errors.discord?.message}</p>
+        </div>
       </div>
 
       <div className='flex gap-6'>
-        <div className='flex flex-col gap-2'>
-          <label htmlFor='weekDays' className='font-semibold'>
-            Quando costuma jogar?
-          </label>
+        <WeekDays weekDays={weekDays} setWeekDays={setWeekDays} />
 
-          <ToggleGroup.Root
-            type='multiple'
-            className='grid grid-cols-4 gap-2'
-            value={weekDays}
-            onValueChange={setWeekDays}
-          >
-            <ToggleGroup.Item
-              value='0'
-              title='Domingo'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('0') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              D
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='1'
-              title='Segunda'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('1') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              S
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='2'
-              title='Terça'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('2') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              T
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='3'
-              title='Quarta'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('3') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              Q
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='4'
-              title='Quinta'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('4') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              Q
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='5'
-              title='Sexta'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('5') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              S
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              value='6'
-              title='Sábado'
-              className={`w-8 h-8 rounded ${
-                weekDays.includes('6') ? 'bg-violet-500' : 'bg-zinc-900'
-              }`}
-            >
-              S
-            </ToggleGroup.Item>
-          </ToggleGroup.Root>
-        </div>
         <div className='flex flex-col gap-2 flex-1'>
           <label htmlFor='hourStart' className='font-semibold'>
             Qual horário do dia?
           </label>
           <div className='grid grid-cols-2 gap-2'>
-            <Input
+            <input
               id='hourStart'
               type='time'
               placeholder='De'
+              defaultValue=''
+              className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'
               {...register('hourStart')}
             />
-            <Input
+            <input
               id='hourEnd'
               type='time'
               placeholder='Até'
+              className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'
               {...register('hourEnd')}
             />
           </div>
-          <p>{errors.hourStart?.message || errors.hourEnd?.message}</p>
+          <p className='text-red-500 text-sm'>
+            {errors.hourStart?.message || errors.hourEnd?.message}
+          </p>
         </div>
       </div>
 
