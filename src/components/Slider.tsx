@@ -54,7 +54,13 @@ export function Slider({ games }: { games: Game[] }) {
   );
 
   React.useEffect(() => {
-    internalSlider.current?.update({});
+    internalSlider.current?.update({
+      slides: {
+        perView: 4,
+        spacing: 20,
+      },
+      loop: true,
+    });
   }, [internalSlider, games]);
 
   return (
