@@ -102,7 +102,7 @@ export function FormCreateAd({
             </option>
           ))}
         </select>
-        <p className='text-red-500 text-sm'>Selecione um game</p>
+        <p className='text-red-500 text-sm'>{errors.game?.message}</p>
       </div>
 
       <div className='flex flex-col gap-2'>
