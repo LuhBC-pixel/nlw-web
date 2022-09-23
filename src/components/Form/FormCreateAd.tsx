@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { useForm } from 'react-hook-form';

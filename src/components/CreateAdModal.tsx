@@ -1,8 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { ResponseType } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { FormCreateAd } from './Form/FormCreateAd';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Game {
   id: string;
@@ -18,10 +20,15 @@ export interface IFormInputs {
   hourEnd: string;
 }
 
-export function CreateAdModal() {
+interface Props {
+  setOpenModal: (open: boolean) => void;
+}
+
+export function CreateAdModal({ setOpenModal }: Props) {
   const [games, setGames] = useState<Game[]>();
   const [weekDays, setWeekDays] = useState<string[]>([]);
   const [useVoiceChannel, setUseVoiceChannel] = useState(false);
+  const [response, setResponse] = useState<ResponseType | any>();
 
   useEffect(() => {
     axios('https://nlw-server-production-254a.up.railway.app/games').then(
@@ -31,9 +38,21 @@ export function CreateAdModal() {
     );
   }, []);
 
-  async function handleCreatAd(data: any) {
+  async function handleCreatAd(data: IFormInputs) {
     try {
-      const response = await axios.post(
+      if (weekDays.length === 0) {
+        toast.error('Selecione um dia da semana', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        return;
+      }
+      await axios.post(
         `https://nlw-server-production-254a.up.railway.app/games/${data.game}/ads`,
         {
           name: data.name,
@@ -45,10 +64,28 @@ export function CreateAdModal() {
           useVoiceChannel: useVoiceChannel,
         }
       );
-
-      toast('Anúncio criado com sucesso!');
+      toast('Anúncio criado com sucesso!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        setOpenModal(false);
+      }, 3000);
     } catch (err) {
-      toast.error('Erro ao criar anúncio!');
+      toast.error('Erro ao criar anúncio!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -70,17 +107,7 @@ export function CreateAdModal() {
           />
         </Dialog.Content>
       </Dialog.Portal>
-      <ToastContainer
-        position='top-right'
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </>
   );
 }

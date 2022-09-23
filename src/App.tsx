@@ -19,6 +19,7 @@ interface Game {
 
 function App() {
   const [games, setGames] = useState<Game[]>();
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     axios('https://nlw-server-production-254a.up.railway.app/games').then(
@@ -42,9 +43,9 @@ function App() {
 
       <Slider games={games || []} />
 
-      <Dialog.Root>
+      <Dialog.Root open={openModal} onOpenChange={setOpenModal}>
         <CreateAdBanner />
-        <CreateAdModal />
+        <CreateAdModal setOpenModal={setOpenModal} />
       </Dialog.Root>
     </div>
   );
